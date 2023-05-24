@@ -1,44 +1,22 @@
 pipeline {
-  agent {
-    label "docker"
-  }
-  stages {
-    stage("build") {
-      agent {
-        docker {
-          image 'node:8.9.1'
-          args '-p 3000:3000 -v $(pwd):/app'
-        }
-      }
-      steps {
-        sh "npm install"
-        sh "npm run-script build"
-      }
+    agent {
+        docker { image 'node:10.16.3' }
     }
-    stage("test") {
-      agent {
-        docker {
-          image 'node:8.9.1'
-          args '-p 3000:3000 -v $(pwd):/app'
+    stages {
+        stage('Build') {
+            steps {
+               sh 'npm install'
+            }
         }
-      }
-      steps {
-        sh "npm test"
-      }
-    }
-    stage("deploy") {
-      agent {
-        docker {
-          image 'nginx:alpine'
-          args '-v $(pwd)/dist:/usr/share/nginx/html'
+        stage('Test') {
+            steps {
+               sh 'npm test'
+            }
         }
-      }
-      steps {
-        sh "cp -r dist /usr/share/nginx/html/"
-      }
-      steps {
-        sh "cp -r dist /usr/share/nginx/html/"
-      }
+        stage('Deploy') {
+            steps {
+               sh 'npm run deploy'
+            }
+        }
     }
-  }
 }
