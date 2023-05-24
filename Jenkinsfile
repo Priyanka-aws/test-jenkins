@@ -36,6 +36,9 @@ pipeline {
       steps {
         sh "cp -r dist /usr/share/nginx/html/"
       }
+      steps {
+        sh "cp -r dist /usr/share/nginx/html/"
+      }
     }
   }
 }
